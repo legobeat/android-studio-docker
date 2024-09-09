@@ -3,6 +3,8 @@ FROM ubuntu:22.04
 LABEL Simon Egli <docker_android_studio_860dd6@egli.online>
 
 ARG USER=android
+ARG UID=1000
+ARG GID=$UID
 
 #RUN dpkg --add-architecture i386
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -18,26 +20,26 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
         && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN groupadd -g 1000 -r $USER
-RUN useradd -u 1000 -g 1000 --create-home -r $USER
+RUN groupadd -g $GID -r $USER
+RUN useradd -u $UID -g $GID --create-home -r $USER
 RUN adduser $USER libvirt
 RUN adduser $USER kvm
 #Change password
-RUN echo "$USER:$USER" | chpasswd
+RUN echo "$UID:$GID" | chpasswd
 #Make sudo passwordless
 RUN echo "${USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-$USER
 RUN usermod -aG sudo $USER
 RUN usermod -aG plugdev $USER
 RUN mkdir -p /androidstudio-data
 VOLUME /androidstudio-data
-RUN chown $USER:$USER /androidstudio-data
+RUN chown $UID:$GID /androidstudio-data
 
 RUN mkdir -p /studio-data/Android/Sdk && \
-    chown -R $USER:$USER /studio-data/Android
+    chown -R $UID:$GID /studio-data/Android
 
 
 RUN mkdir -p /studio-data/profile/android && \
-    chown -R $USER:$USER /studio-data/profile
+    chown -R $UID:$GID /studio-data/profile
 
 COPY provisioning/docker_entrypoint.sh /usr/local/bin/docker_entrypoint.sh
 COPY provisioning/ndkTests.sh /usr/local/bin/ndkTests.sh
