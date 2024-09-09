@@ -2,33 +2,37 @@ FROM ubuntu:22.04
 
 LABEL Simon Egli <docker_android_studio_860dd6@egli.online>
 
-ARG USER=android
-ARG UID=1000
-ARG GID=$UID
-
 #RUN dpkg --add-architecture i386
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         apt-utils wget \
         build-essential git unzip sudo \
         libc6 libncurses5 libncurses6 libstdc++6 lib32z1 libbz2-1.0 \
         libxrender1 libxtst6 libxi6 libfreetype6 libxft2 xz-utils \
-        libvirt-daemon-system iproute2 \
+        #libvirt-daemon-system iproute2 \
         qemu qemu-kvm bridge-utils libnotify4 libglu1 libqt5widgets5 \
-        openjdk-8-jdk openjdk-11-jdk openjdk-17-jdk openjdk-8-jdk-headless openjdk-11-jdk-headless openjdk-17-jdk-headless openjdk-8-jre-headless openjdk-11-jre-headless openjdk-17-jre-headless \
+        # openjdk-8-jdk openjdk-11-jdk openjdk-17-jdk openjdk-8-jdk-headless openjdk-11-jdk-headless openjdk-17-jdk-headless openjdk-8-jre-headless openjdk-11-jre-headless openjdk-17-jre-headless \
         xvfb \
         xdg-user-dirs ssh-client libgtk2.0-bin libglib2.0-data \
         # qemu-utils qemu-block-extra gnupg libgdk-pixbuf2.0-bin libc-devtools librsvg2-common mesa-utils \
         && \
-    apt-get purge apt-utils && \
+    #DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \ 
+    #  openjdk-8-jre-headless openjdk-11-jre-headless openjdk-17-jre-headless && \
+    #DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \ 
+    #  openjdk-8-jdk openjdk-11-jdk openjdk-17-jdk \
+    #  openjdk-8-jdk-headless openjdk-11-jdk-headless openjdk-17-jdk-headless && \
+    apt-get purge --autoremove -y apt-utils && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ARG USER=android
+ARG UID=1000
+ARG GID=$UID
 
 RUN groupadd -g $GID -r $USER
 RUN useradd -u $UID -g $GID --create-home -r $USER
-RUN adduser $USER libvirt
-RUN adduser $USER kvm
-#Change password
-RUN echo "$UID:$GID" | chpasswd
-#Make sudo passwordless
+#RUN adduser $USER libvirt
+#RUN adduser $USER kvm
+RUN passwd --delete $USER
+# Make sudo passwordless
 RUN echo "${USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-$USER
 RUN usermod -aG sudo $USER
 RUN usermod -aG plugdev $USER
