@@ -4,12 +4,17 @@ LABEL Simon Egli <docker_android_studio_860dd6@egli.online>
 
 ARG USER=android
 
-RUN dpkg --add-architecture i386
-RUN apt-get update && apt-get install -y \
-        build-essential git neovim wget unzip sudo \
-        libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386 \
-        libxrender1 libxtst6 libxi6 libfreetype6 libxft2 xz-utils vim\
-        qemu qemu-kvm bridge-utils libnotify4 libglu1 libqt5widgets5 openjdk-8-jdk openjdk-11-jdk xvfb \
+#RUN dpkg --add-architecture i386
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential git wget unzip sudo \
+        libc6 libncurses5 libncurses6 libstdc++6 lib32z1 libbz2-1.0 \
+        libxrender1 libxtst6 libxi6 libfreetype6 libxft2 xz-utils \
+        libvirt-daemon-system \
+        qemu qemu-kvm bridge-utils libnotify4 libglu1 libqt5widgets5 \
+        openjdk-8-jdk openjdk-11-jdk openjdk-17-jdk openjdk-8-jre-headless openjdk-11-jre-headless openjdk-17-jre-headless \
+        xvfb \
+        xdg-user-dirs ssh-client libgtk2.0-bin libglib2.0-data \
+        # qemu-utils qemu-block-extra libgdk-pixbuf2.0-bin libc-devtools librsvg2-common \
         && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
