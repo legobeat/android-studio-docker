@@ -59,8 +59,9 @@ RUN tar -xvf flutter.tar.xz
 RUN rm flutter.tar.xz
 
 #Android Studio
-ARG ANDROID_STUDIO_URL=https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2023.1.1.27/android-studio-2023.1.1.27-linux.tar.gz
-ARG ANDROID_STUDIO_VERSION=2023.1.1.27
+ARG ANDROID_STUDIO_VERSION=2024.1.2.12
+ARG ANDROID_STUDIO_URL=https://dl.google.com/dl/android/studio/ide-zips/${ANDROID_STUDIO_VERSION}/android-studio-${ANDROID_STUDIO_VERSION}-linux.tar.gz
+#ARG ANDROID_STUDIO_URL=https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2023.1.1.27/android-studio-2023.1.1.27-linux.tar.gz
 
 RUN wget "$ANDROID_STUDIO_URL" -O android-studio.tar.gz
 RUN tar xzvf android-studio.tar.gz
