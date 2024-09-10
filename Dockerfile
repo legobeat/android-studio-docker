@@ -4,7 +4,7 @@ LABEL Simon Egli <docker_android_studio_860dd6@egli.online>
 
 #RUN dpkg --add-architecture i386
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        apt-utils wget \
+        apt-utils wget ca-certificates \
         build-essential git unzip sudo \
         libc6 libncurses5 libncurses6 libstdc++6 lib32z1 libbz2-1.0 \
         libxrender1 libxtst6 libxi6 libfreetype6 libxft2 xz-utils \
